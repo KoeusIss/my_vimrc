@@ -2,104 +2,105 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 syntax on
 
-set rtp+=/home/koeus/.vim/bundle/Vundle.vim
-" Vundle
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
-Plugin 'git://git.wincent.com/command-t.git'
-Plugin 'vim-airline/vim-airline'
-Plugin 'scrooloose/nerdtree'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-Plugin 'sjl/badwolf'
-" Plugin 'valloric/youcompleteme'
 Plugin 'tpope/vim-surround'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/nerdtree'
+Plugin 'git://git.wincent.com/command-t.git'
+Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 Plugin 'kien/ctrlp.vim'
-call vundle#end()            " required
-filetype plugin indent on    " requied
-set exrc
-set secure
-set mouse-=a
-augroup project
-  autocmd!
-  autocmd BufRead, BufNewFile *.h, *.c set filetype=c.doxygen
-augroup end
-" CtrlP
-nnoremap <leader>p :CtrlP<CR>
-let g:ctrlp_match_window = 'bottom,order:ttb'
-let g:ctrlp_switch_buffer = 0
-let g:ctrlp_working_path_mode = 0
-let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-" NERDTree
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
-nnoremap <leader>n :NERDTreeToggle<CR>
-let g:NERDTreeDirArrowExpandable = '▸'
-let g:NERDTreeDirArrowCollapsible = '▾'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'valloric/youcompleteme'
+Plugin 'kyoz/purify', { 'rtp': 'vim' }
+Plugin 'honza/vim-snippets'
+Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'sjl/badwolf'
+
+call vundle#end()
+" Utilities
+filetype plugin indent on
+filetype off
+
 " Color
-colorscheme badwolf
 syntax enable
-" Spaces and Tabs
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
-set expandtab
-set smartindent
+colorscheme badwolf
+
 " UI Config
-set number
+set wrap
+set modelines=0
+" Extern paste indentation
+nnoremap <F2> :set invpaste paste?<CR>
+imap <F2> <C-O>:set invpaste paste?<CR>
+set pastetoggle=<F2>
+
+" Spaces and tabs
+" set textwidth=79
+set formatoptions=tcqrn1
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set noshiftround
+set smartindent
+set scrolloff=5
+set backspace=indent,eol,start
+set ttyfast
+set laststatus=2
+set showmode
 set showcmd
-set cursorline
-filetype indent on
-set wildmenu
-set lazyredraw
-set showmatch
+set matchpairs+=<:>
+set list
+set listchars=tab:›\ ,trail:•,extends:#,nbsp:.
+set number
+set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ [BUFFER=%n]\ %{strftime('%c')}
+" Encoding
+set encoding=utf-8
 " Search
-set incsearch
 set hlsearch
-nnoremap <leader><space> :nohlsearch<CR>
-" Folding
-set foldenable
-set foldlevelstart=10
-set foldnestmax=10
-set foldmethod=indent
-" Movement
-nnoremap j gj
-nnoremap k gk
-nnoremap  <leader>f  $
-nnoremap  <leader>q  0
-nnoremap <leader>j <c-w>j
-nnoremap <leader>k <c-w>k
-nnoremap <leader>l <c-w>l
-nnoremap <leader>h <c-w>h
-" Leader shortcut
-let mapleader=" "
-imap jj <Esc>
-" Autogroup
-augroup configgroup
-    autocmd!
-    autocmd VimEnter * highlight clear SignColumn
-    autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md
-                \:call <SID>StripTrailingWhitespaces()
-    autocmd FileType java setlocal noexpandtab
-    autocmd FileType java setlocal list
-    autocmd FileType java setlocal listchars=tab:+\ ,eol:-
-    autocmd FileType java setlocal formatprg=par\ -w80\ -T4
-    autocmd FileType php setlocal expandtab
-    autocmd FileType php setlocal list
-    autocmd FileType php setlocal listchars=tab:+\ ,eol:-
-    autocmd FileType php setlocal formatprg=par\ -w80\ -T4
-    autocmd FileType ruby setlocal tabstop=2
-    autocmd FileType ruby setlocal shiftwidth=2
-    autocmd FileType ruby setlocal softtabstop=2
-    autocmd FileType ruby setlocal commentstring=#\ %s
-    autocmd FileType python setlocal commentstring=#\ %s
-    autocmd BufEnter *.cls setlocal filetype=java
-    autocmd BufEnter *.zsh-theme setlocal filetype=zsh
-    autocmd BufEnter Makefile setlocal noexpandtab
-    autocmd BufEnter *.sh setlocal tabstop=2
-    autocmd BufEnter *.sh setlocal shiftwidth=2
-    autocmd BufEnter *.sh setlocal softtabstop=2
-augroup END
-" Organistaion 
-set modelines=1
+set incsearch
+set ignorecase
+set smartcase
+set viminfo='100,<9999,s100
+
+" Map the <Space> key to toggle a selected fold opened/closed.
+nnoremap <silent> <Space> @=(foldlevel('.')?'za':"\<Space>")<CR>
+vnoremap <Space> zf
+
+" Automatically save and load folds
+autocmd BufWinLeave *.* mkview
+autocmd BufWinEnter *.* silent loadview"
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+map <C-n> :NERDTreeToggle<CR>
+"Syntastic setting
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_posix_standard = 1
+let g:cpp_experimental_simple_template_highlight = 1
+" Movement and shortcut
+imap jj <esc>
+let mapleader=","
+nnoremap <leader>f $
+nnoremap <leader>q 0
+nnoremap <c-j> <c-w>j
+nnoremap <c-h> <c-w>h
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
