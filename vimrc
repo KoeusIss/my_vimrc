@@ -21,6 +21,9 @@ Plugin 'kyoz/purify', { 'rtp': 'vim' }
 Plugin 'honza/vim-snippets'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'sjl/badwolf'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'tpope/vim-commentary'
+Plugin 'terryma/vim-multiple-cursors'
 
 call vundle#end()
 " Utilities
@@ -34,6 +37,7 @@ colorscheme badwolf
 " UI Config
 set wrap
 set modelines=0
+highlight clear SignColumn
 " Extern paste indentation
 nnoremap <F2> :set invpaste paste?<CR>
 imap <F2> <C-O>:set invpaste paste?<CR>
@@ -42,12 +46,13 @@ set pastetoggle=<F2>
 " Spaces and tabs
 " set textwidth=79
 set formatoptions=tcqrn1
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
 set expandtab
 set noshiftround
 set smartindent
+" Urilities
 set scrolloff=5
 set backspace=indent,eol,start
 set ttyfast
@@ -59,6 +64,13 @@ set list
 set listchars=tab:›\ ,trail:•,extends:#,nbsp:.
 set number
 set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ [BUFFER=%n]\ %{strftime('%c')}
+set title
+set wildmenu
+set nobackup
+set noswapfile
+set mousehide
+set splitbelow
+set splitright
 " Encoding
 set encoding=utf-8
 " Search
@@ -77,7 +89,6 @@ autocmd BufWinLeave *.* mkview
 autocmd BufWinEnter *.* silent loadview"
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-map <C-n> :NERDTreeToggle<CR>
 "Syntastic setting
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -95,6 +106,8 @@ let g:cpp_member_variable_highlight = 1
 let g:cpp_class_decl_highlight = 1
 let g:cpp_posix_standard = 1
 let g:cpp_experimental_simple_template_highlight = 1
+" YouCompleteMe
+let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 " Movement and shortcut
 imap jj <esc>
 let mapleader=","
